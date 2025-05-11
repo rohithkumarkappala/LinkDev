@@ -1,26 +1,20 @@
 const express = require("express");
 const app = express();
 const {adminAuth,userAuth} = require("./middlewares/auth");
-app.use("/admin",adminAuth);
+app.get("/user/userdata",(req,res)=>{
+    try{
+        throw new Error("User data not found");
+    }
+    catch(err){
+        res.status(500).send(err.message);
+    }
+})
 
-app.get("/admin/data",(req,res)=>{
-    res.send("Hello from /admin/data");
-});
-
-app.post("/admin/data",(req,res)=>{
-    res.send("Hello from /admin/data");
-});
-
-app.post("/user",userAuth,(req,res)=>{
-    res.send("Data Successfully stored in DataBase")
-});
-
-app.delete("/user",(req,res)=>{
-    res.send("Data Successfully deleted from DataBase")
-});
-
-app.use("/test", (req,res)=>{
-    res.send("Hello from /hello");
+app.use("/",(err,req,res,next)=>{
+    if(err){
+        console.log("Error middleware");
+        res.status(500).send("Internal Server Error");
+    }
 })
 
 app.listen(3000, () => {
