@@ -1,31 +1,17 @@
 const express = require("express");
 const app = express();
+const {adminAuth,userAuth} = require("./middlewares/auth");
+app.use("/admin",adminAuth);
 
-app.get("/user",(req,res,next)=>{
-    console.log("Response 1!!")
-    res.send("Hello from GET API call")
-    next();
-    
-},(req,res,next)=>{
-    console.log("Response 2!!")
-    // res.send("Hello from GET API call")
-    next();
-},(req,res,next)=>{
-    console.log("Response 3!!")
-    // res.send("Hello from GET API call")
-    next();
-},(req,res,next)=>{
-    console.log("Response 4!!")
-    // res.send("Hello from GET API call")
-    next();
-},(req,res,next)=>{
-    console.log("Response 5!!")
-    // res.send("Hello from GET API call")
-    next();
-}
-);
+app.get("/admin/data",(req,res)=>{
+    res.send("Hello from /admin/data");
+});
 
-app.post("/user",(req,res)=>{
+app.post("/admin/data",(req,res)=>{
+    res.send("Hello from /admin/data");
+});
+
+app.post("/user",userAuth,(req,res)=>{
     res.send("Data Successfully stored in DataBase")
 });
 
