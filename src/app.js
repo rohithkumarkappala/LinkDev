@@ -1,22 +1,34 @@
 const express = require("express");
 const app = express();
-const {adminAuth,userAuth} = require("./middlewares/auth");
-app.get("/user/userdata",(req,res)=>{
+const { connectDB } = require("./config/database");
+const {User} = require("./models/user");
+
+app.post("/signup",async (req,res)=>{
+    const data = {
+        firstName:"Sachin",
+        lastName:"Tendulkar",
+        emailId:"Sachin@Tendulkar.com",
+        password:"Sachin@123",
+    }
+    const user = new User(data);
     try{
-        throw new Error("User data not found");
+        await user.save();
+        res.status(201).send("User created successfully");
     }
     catch(err){
-        res.status(500).send(err.message);
+        console.error("Error creating user");
+        res.status(500).send("Error creating user" + err.message);
     }
 })
 
-app.use("/",(err,req,res,next)=>{
-    if(err){
-        console.log("Error middleware");
-        res.status(500).send("Internal Server Error");
-    }
-})
-
-app.listen(3000, () => {
-    console.log("Server is running on port 3000");
-});
+connectDB()
+    .then(() => {
+        console.log("Database connected successfully");
+        app.listen(3000, () => {
+            console.log("Server is running on port 3000");
+        });
+    })
+    .catch((err)=>{
+        console.error("Database connection failed", err);
+        process.exit(1);
+    })
